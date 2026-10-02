@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Smart Task Planner</title>
+
+    <style>
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background:#f4f4f4;
+        }
+
+        .container{
+            width:700px;
+            margin:40px auto;
+            background:white;
+            padding:35px;
+            border-radius:10px;
+            box-shadow:0px 0px 10px gray;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        label{
+            display:block;
+            font-weight:bold;
+            margin-top:20px;
+            margin-bottom:8px;
+        }
+
+        input,
+        textarea,
+        select{
+            width:100%;
+            box-sizing:border-box;
+            padding:12px;
+            font-size:16px;
+        }
+
+        textarea{
+            height:140px;
+            resize:vertical;
+        }
+
+        button{
+            width:100%;
+            margin-top:35px;
+            padding:15px;
+            background:#0d6efd;
+            color:white;
+            border:none;
+            border-radius:5px;
+            font-size:18px;
+            font-weight:bold;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#0b5ed7;
+        }
+
+        .link{
+            text-align:center;
+            margin-top:30px;
+        }
+
+        .link a{
+            text-decoration:none;
+            color:blue;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Smart Task Planner</h1>
+
+    <form method="POST">
+
+        <label for="title">タスク名</label>
+
+        <input
+            type="text"
+            id="title"
+            name="title"
+            required
+        >
+
+        <label for="description">説明</label>
+
+        <textarea
+            id="description"
+            name="description"
+            required
+        ></textarea>
+
+        <label for="task_date">予定日</label>
+
+        <input
+            type="date"
+            id="task_date"
+            name="task_date"
+            required
+        >
+
+        <label for="start_time">開始時刻</label>
+
+        <input
+            type="time"
+            id="start_time"
+            name="start_time"
+            min="09:00"
+            max="21:59"
+            required
+        >
+
+        <label for="end_time">終了時刻</label>
+
+        <input
+            type="time"
+            id="end_time"
+            name="end_time"
+            min="09:01"
+            max="22:00"
+            required
+        >
+        <p id="duration_display"></p>
+
+        <label for="importance">重要度</label>
+
+        <select id="importance" name="importance">
+
+            <option value="高">高</option>
+            <option value="中">中</option>
+            <option value="低">低</option>
+
+        </select>
+
+        <label for="status">状態</label>
+
+        <select id="status" name="status">
+
+            <option value="未着手">未着手</option>
+            <option value="完了">完了</option>
+
+        </select>
+
+        <button type="submit">タスクを追加</button>
+
+    </form>
+
+    <div class="link">
+
+        <a href="/list">タスク一覧</a>
+
+    </div>
+
+</div>
+<script>
+
+    const startTime = document.getElementById("start_time");
+    const endTime = document.getElementById("end_time");
+    const durationDisplay = document.getElementById("duration_display");
+
+
+    function calculateDuration() {
+
+        if (startTime.value === "" || endTime.value === "") {
+            durationDisplay.textContent = "";
+            return;
+        }
+
+
+        const [startHour, startMinute] =
+            startTime.value.split(":").map(Number);
+
+        const [endHour, endMinute] =
+            endTime.value.split(":").map(Number);
+
+
+        const startTotal =
+            startHour * 60 + startMinute;
+
+        const endTotal =
+            endHour * 60 + endMinute;
+
+
+        const duration =
+            endTotal - startTotal;
+
+
+        if (duration <= 0) {
+
+            durationDisplay.textContent =
+                "終了時刻は開始時刻より後にしてください。";
+
+            return;
+        }
+
+
+        const hours =
+            Math.floor(duration / 60);
+
+        const minutes =
+            duration % 60;
+
+
+        if (hours > 0 && minutes > 0) {
+
+            durationDisplay.textContent =
+                `予定時間：${hours}時間${minutes}分`;
+
+        } else if (hours > 0) {
+
+            durationDisplay.textContent =
+                `予定時間：${hours}時間`;
+
+        } else {
+
+            durationDisplay.textContent =
+                `予定時間：${minutes}分`;
+        }
+    }
+
+
+    startTime.addEventListener(
+        "change",
+        calculateDuration
+    );
+
+    endTime.addEventListener(
+        "change",
+        calculateDuration
+    );
+
+</script>
+
+</body>
+
+</html>

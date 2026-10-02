@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>タスク編集</title>
+
+    <style>
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background:#f4f4f4;
+        }
+
+        .container{
+            width:600px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.2);
+        }
+
+        h1{
+            text-align:center;
+            color:#333;
+        }
+
+        label{
+            display:block;
+            margin-top:18px;
+            font-weight:bold;
+        }
+
+        input,
+        textarea,
+        select{
+            width:100%;
+            padding:10px;
+            margin-top:5px;
+            box-sizing:border-box;
+            font-size:16px;
+        }
+
+        textarea{
+            resize:vertical;
+            height:120px;
+        }
+
+        button{
+            width:100%;
+            margin-top:30px;
+            padding:12px;
+            background:#007BFF;
+            color:white;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:18px;
+        }
+
+        button:hover{
+            background:#0056b3;
+        }
+
+        .back{
+            margin-top:25px;
+            text-align:center;
+        }
+
+        a{
+            text-decoration:none;
+            color:#007BFF;
+        }
+
+        a:hover{
+            text-decoration:underline;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>タスク編集</h1>
+
+    <form method="POST">
+
+        <input
+            type="hidden"
+            name="sort"
+            value="{{ sort }}"
+        >
+
+        <input
+            type="hidden"
+            name="keyword"
+            value="{{ keyword }}"
+        >
+
+        <label for="title">タスク名</label>
+
+        <input
+            type="text"
+            id="title"
+            name="title"
+            value="{{ task[1] }}"
+            required
+        >
+
+        <label for="description">説明</label>
+
+        <textarea
+            id="description"
+            name="description"
+            required
+        >{{ task[2] }}</textarea>
+
+        <label for="task_date">予定日</label>
+
+        <input
+            type="date"
+            id="task_date"
+            name="task_date"
+            value="{{ task[3] }}"
+            required
+        >
+
+        <label for="start_time">開始時刻</label>
+
+        <input
+            type="time"
+            id="start_time"
+            name="start_time"
+            value="{{ task[4] }}"
+            min="09:00"
+            max="21:59"
+            required
+        >
+
+        <label for="end_time">終了時刻</label>
+
+        <input
+            type="time"
+            id="end_time"
+            name="end_time"
+            value="{{ task[5] }}"
+            min="09:01"
+            max="22:00"
+            required
+        >
+
+        <label for="importance">重要度</label>
+
+        <select id="importance" name="importance">
+
+            <option
+                value="高"
+                {% if task[6] == "高" %}selected{% endif %}
+            >
+                高
+            </option>
+
+            <option
+                value="中"
+                {% if task[6] == "中" %}selected{% endif %}
+            >
+                中
+            </option>
+
+            <option
+                value="低"
+                {% if task[6] == "低" %}selected{% endif %}
+            >
+                低
+            </option>
+
+        </select>
+
+        <label for="status">状態</label>
+
+        <select id="status" name="status">
+
+            <option
+                value="未着手"
+                {% if task[7] == "未着手" %}selected{% endif %}
+            >
+                未着手
+            </option>
+
+            <option
+                value="完了"
+                {% if task[7] == "完了" %}selected{% endif %}
+            >
+                完了
+            </option>
+
+        </select>
+
+        <button type="submit">
+            更新する
+        </button>
+
+    </form>
+
+    <div class="back">
+
+        <a href="{{ url_for('detail', task_id=task[0], sort=sort, keyword=keyword) }}">
+            ← タスク詳細へ戻る
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

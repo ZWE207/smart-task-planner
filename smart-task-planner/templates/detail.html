@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>タスク詳細</title>
+
+    <style>
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background:#f4f4f4;
+        }
+
+        .container{
+            width:700px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0 0 10px gray;
+        }
+
+        h1{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th,
+        td{
+            border:1px solid #cccccc;
+            padding:12px;
+        }
+
+        th{
+            width:35%;
+            background:#eeeeee;
+            text-align:left;
+        }
+
+        .description{
+            white-space:pre-wrap;
+        }
+
+        .buttons{
+            margin-top:30px;
+            text-align:center;
+        }
+
+        .buttons a,
+        .buttons button{
+            display:inline-block;
+            margin:8px;
+            padding:10px 20px;
+            text-decoration:none;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        .edit{
+            background:#007BFF;
+            color:white;
+        }
+
+        .back{
+            background:#6c757d;
+            color:white;
+        }
+
+        .delete{
+            background:#dc3545;
+            color:white;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>タスク詳細</h1>
+
+    <table>
+
+        <tr>
+            <th>ID</th>
+            <td>{{ task[0] }}</td>
+        </tr>
+
+        <tr>
+            <th>タスク名</th>
+            <td>{{ task[1] }}</td>
+        </tr>
+
+        <tr>
+            <th>説明</th>
+            <td class="description">{{ task[2] }}</td>
+        </tr>
+
+        <tr>
+            <th>予定日</th>
+            <td>{{ task[3] }}</td>
+        </tr>
+
+        <tr>
+            <th>開始時刻</th>
+            <td>{{ task[4] }}</td>
+        </tr>
+
+        <tr>
+            <th>終了時刻</th>
+            <td>{{ task[5] }}</td>
+        </tr>
+
+        <tr>
+            <th>重要度</th>
+            <td>{{ task[6] }}</td>
+        </tr>
+
+        <tr>
+            <th>状態</th>
+            <td>{{ task[7] }}</td>
+        </tr>
+
+    </table>
+
+    <div class="buttons">
+
+        <a
+            class="edit"
+            href="{{ url_for('edit', task_id=task[0], sort=sort, keyword=keyword) }}"
+        >
+            編集
+        </a>
+
+        <form
+            action="{{ url_for('delete_task', task_id=task[0]) }}"
+            method="POST"
+            style="display:inline;"
+            onsubmit="return confirm('このタスクを削除しますか？');"
+        >
+
+            <input
+                type="hidden"
+                name="sort"
+                value="{{ sort }}"
+            >
+
+            <input
+                type="hidden"
+                name="keyword"
+                value="{{ keyword }}"
+            >
+
+            <button
+                class="delete"
+                type="submit"
+            >
+                削除
+            </button>
+
+        </form>
+
+        <a
+            class="back"
+            href="{{ url_for('list_page', sort=sort, keyword=keyword) }}"
+        >
+            一覧へ戻る
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

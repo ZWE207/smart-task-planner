@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>入力エラー</title>
+
+    <style>
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background:#f4f4f4;
+        }
+
+        .container{
+
+            width:500px;
+            margin:100px auto;
+            background:white;
+            padding:40px;
+            text-align:center;
+            border-radius:10px;
+            box-shadow:0 0 10px rgba(0,0,0,0.2);
+
+        }
+
+        h1{
+
+            color:#dc3545;
+
+        }
+
+        p{
+
+            font-size:18px;
+            margin:30px 0;
+
+        }
+
+        a{
+
+            display:inline-block;
+            padding:12px 25px;
+            background:#007BFF;
+            color:white;
+            text-decoration:none;
+            border-radius:5px;
+
+        }
+
+        a:hover{
+
+            background:#0056b3;
+
+        }
+
+        .suggestion-button {
+            display: block;
+            width: 200px;
+            margin: 10px auto;
+            padding: 10px 15px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .ai-recommendation {
+            margin: 20px auto;
+            padding: 15px;
+            background-color: #f0f7ff;
+            border-radius: 8px;
+            width: 80%;
+            line-height: 1.6;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    {% if free_slots %}
+        <h1>⚠ スケジュール重複</h1>
+    {% else %}
+        <h1>⚠ 入力エラー</h1>
+    {% endif %}
+
+    <p>
+
+        {{ message if message else "入力内容を確認してください。" }}
+
+    </p>
+
+    {% if priority_case == "new_higher" %}
+
+    <p>
+        新しいタスクの重要度「{{ importance }}」は、
+        既存の「{{ conflicting_task[1] }}」
+        （重要度：{{ conflicting_task[6] }}）より高いです。
+    </p>
+
+    <p>
+        新しいタスクをこの時間に入れ、
+        「{{ conflicting_task[1] }}」を別の時間へ移動することをおすすめします。
+    </p>
+
+
+    {% elif priority_case == "same" %}
+
+    <p>
+        新しいタスクと
+        「{{ conflicting_task[1] }}」の重要度は同じです。
+    </p>
+
+    <p>
+        どちらを優先するか選択してください。
+    </p>
+
+
+    {% elif priority_case == "existing_higher" %}
+
+    <p>
+        既存の「{{ conflicting_task[1] }}」の重要度が高いため、
+        新しいタスクを別の時間にすることをおすすめします。
+    </p>
+
+    {% endif %}
+
+    {% if free_slots %}
+
+    <h3>おすすめ時間</h3>
+
+    {% if ai_time_recommendation %}
+
+        <div class="ai-recommendation">
+            <strong>🤖 AIのおすすめ</strong>
+            <p>{{ ai_time_recommendation }}</p>
+        </div>
+
+    {% endif %}
+
+    {% for start, end in free_slots %}
+
+        {% if priority_case == "new_higher" %}
+
+        <form action="/replace_task" method="POST">
+
+            <input type="hidden"
+                   name="existing_task_id"
+                   value="{{ conflicting_task[0] }}">
+
+            <input type="hidden"
+                   name="moved_start_time"
+                   value="{{ start }}">
+
+            <input type="hidden"
+                   name="moved_end_time"
+                   value="{{ end }}">
+
+            <input type="hidden"
+                   name="title"
+                   value="{{ title }}">
+
+            <input type="hidden"
+                   name="description"
+                   value="{{ description }}">
+
+            <input type="hidden"
+                   name="task_date"
+                   value="{{ task_date }}">
+
+            <input type="hidden"
+                   name="new_start_time"
+                   value="{{ start_time }}">
+
+            <input type="hidden"
+                   name="new_end_time"
+                   value="{{ end_time }}">
+
+            <input type="hidden"
+                   name="importance"
+                   value="{{ importance }}">
+
+            <input type="hidden"
+                   name="status"
+                   value="{{ status }}">
+
+            <button type="submit"
+                    class="suggestion-button">
+
+                「{{ conflicting_task[1] }}」を
+                {{ start }} ～ {{ end }} へ移動
+
+            </button>
+
+        </form>
+
+    {% else %}
+
+        <form action="/" method="POST">
+
+            <input type="hidden"
+                   name="title"
+                   value="{{ title }}">
+
+            <input type="hidden"
+                   name="description"
+                   value="{{ description }}">
+
+            <input type="hidden"
+                   name="task_date"
+                   value="{{ task_date }}">
+
+            <input type="hidden"
+                   name="start_time"
+                   value="{{ start }}">
+
+            <input type="hidden"
+                   name="end_time"
+                   value="{{ end }}">
+
+            <input type="hidden"
+                   name="importance"
+                   value="{{ importance }}">
+
+            <input type="hidden"
+                   name="status"
+                   value="{{ status }}">
+
+            <button type="submit"
+                    class="suggestion-button">
+
+                {{ start }} ～ {{ end }} を選択
+
+            </button>
+
+        </form>
+        {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+    <a href="/">
+
+        タスク入力画面へ戻る
+
+    </a>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Smart Task Planner</title>
+
+    <style>
+
+        body{
+            font-family: Arial, Helvetica, sans-serif;
+            background:#f4f4f4;
+        }
+
+        .container{
+            width:900px;
+            margin:40px auto;
+            background:white;
+            padding:30px;
+            border-radius:10px;
+            box-shadow:0px 0px 10px gray;
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        .menu{
+            margin-bottom:25px;
+        }
+
+        .menu a{
+            margin-right:15px;
+            text-decoration:none;
+            color:blue;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        th,
+        td{
+            border:1px solid #cccccc;
+            padding:10px;
+            text-align:center;
+        }
+
+        th{
+            background:#eeeeee;
+        }
+
+        tr:nth-child(even){
+            background:#f9f9f9;
+        }
+
+        .search{
+            margin:20px 0;
+        }
+
+        .sort{
+            margin-bottom:20px;
+        }
+
+        .sort a{
+            margin-right:10px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Smart Task Planner</h1>
+
+    <div class="menu">
+
+        <a href="/">➕ タスクを追加</a>
+
+        <a href="/recommend">🤖 AIおすすめ</a>
+
+    </div>
+
+    <div class="sort">
+
+        並び替え：
+
+        <a href="/list?sort=id">ID順</a>
+
+        <a href="/list?sort=new">新しい予定順</a>
+
+        <a href="/list?sort=old">古い予定順</a>
+
+        <a href="/list?sort=title">タイトル順</a>
+
+    </div>
+
+    <div class="search">
+
+        <form action="/list" method="GET">
+
+            タスク検索：
+
+            <input
+                type="text"
+                name="keyword"
+                value="{{ keyword }}"
+            >
+
+            <button type="submit">
+                検索
+            </button>
+
+        </form>
+
+    </div>
+
+    {% if keyword != "" %}
+
+        <p>
+
+            検索文字：
+
+            <strong>{{ keyword }}</strong>
+
+        </p>
+
+    {% endif %}
+
+    {% if tasks|length == 0 %}
+
+        <p>
+            該当するタスクはありません。
+        </p>
+
+    {% endif %}
+
+    <table>
+
+        <tr>
+
+            <th>No.</th>
+
+            <th>タスク名</th>
+
+            <th>予定日</th>
+
+            <th>開始時刻</th>
+
+            <th>終了時刻</th>
+
+            <th>重要度</th>
+
+            <th>状態</th>
+
+            <th>詳細</th>
+
+        </tr>
+
+        {% for task in tasks %}
+
+        <tr>
+
+            <td>{{ loop.index }}</td>
+
+            <td>{{ task[1] }}</td>
+
+            <td>{{ task[3] }}</td>
+
+            <td>{{ task[4] }}</td>
+
+            <td>{{ task[5] }}</td>
+
+            <td>{{ task[6] }}</td>
+
+            <td>{{ task[7] }}</td>
+
+            <td>
+
+                <a href="{{ url_for('detail', task_id=task[0], sort=sort, keyword=keyword) }}">
+                    詳細を見る
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</div>
+
+</body>
+
+</html>
