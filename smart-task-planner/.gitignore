@@ -1,0 +1,22 @@
+# Credentials and local configuration
+.env
+.env.*
+!.env.example
+API key.txt
+*credentials*.json
+# Local task data
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+# Generated files and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
